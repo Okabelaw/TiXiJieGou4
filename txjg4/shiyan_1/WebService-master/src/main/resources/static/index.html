@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>任务1：Web Service服务器端程序开发，个人所得税计算器 202131060519</title>
+    <link rel="stylesheet" href="bootstrap.min.css" type="text/css" />
+</head>
+
+<body>
+<ul data-current="0">
+    <!--如果你需要自定义NAV,可使用channellist标签来完成,这里只设置了2级,如果显示无限级,请使用cms:nav标签-->
+    <li class="">
+        <a href="http://www.gerensuodeshui.cn/">首页</a>
+    </li>
+    <li class="">
+        <a href="http://www.gerensuodeshui.cn/index_shgz.html">税后反算</a>
+    </li>
+    <li class="">
+        <a href="/index_lwbc.html">劳务报酬</a>
+    </li>
+    <li class="">
+        <a href="http://www.gerensuodeshui.cn/index_nzj.html">年终奖</a>
+    </li>
+    <li class="">
+        <a href="http://www.gerensuodeshui.cn/index_5000.html">非居民工资</a>
+    </li>
+    <li class="">
+        <a href="http://www.gerensuodeshui.cn/index_gsslb.html">个税税率表</a>
+    </li>
+    <li class="">
+        <a href="http://www.gerensuodeshui.cn/p/index_excel.html">EXCEL计算个税</a>
+    </li>
+    <li class="">
+        <a href="/calc.html">计算方法</a>
+    </li>
+    <li class="">
+        <a href="/geshuizhishi.html">个税资讯</a>
+    </li>
+</ul>
+<div class="container">
+    <h1>2023年个人所得税计算器</h1>
+    <div>
+        <h5>注意</h5>
+        <ol>
+            <h3>5000元起征税</h3>
+            <li>累计预扣预缴应纳税所得额=累计收入-累计免税收入-累计减除费用-累计专项扣除-累计专项附加扣除-累计依法确定的其他扣除
+
+                本期应预扣预缴税额=（累计预扣预缴应纳税所得额×预扣率-速算扣除数)-累计减免税额-累计已预扣预缴税额
+
+                其中：累计减除费用，按照个税起征点5000元/月乘以纳税人当年截至本月在本单位的任职受雇月份数计算。</li>
+            <li>累计预扣预缴个人所得税的计算方法，是指扣缴义务人在一个纳税年度内，以截至当前月份累计支付的工资薪金所得收入额减除累计基本减除费用、累计专项扣除、累计专项附加扣除和依法确定的累计其他扣除后的余额为预缴应纳税所得额，对照综合所得税率表，计算出累计应预扣预缴税额，减除已预扣预缴税额后的余额，作为本期应预扣预缴税额。该方法适用于综合所得，包括工资、薪金所得，劳务报酬所得，稿酬所得，特许权使用费所得。
+                专项附加扣除项目，包括：子女教育支出、继续教育支出、大病医疗支出、住房贷款利息和住房租金以及赡养老人支出（2019/01/01后扣除）。使用累计预扣预缴的计算方法，计算公式如上。</li>
+            <li>个人所得税是对个人（自然人）取得的各项所得征收的一种所得税。个人所得税起征点是指国家为了完善税收体制，更好的进行税制改革，而制定的税收制度。2018年6月19日，十三届全国人大常委会第三次会议召开，个人所得税免征额拟调至5000元。2018年8月底，调查显示，大部分网民希望提高个税起征点。
+                2018年8月27日十三届全国人大常委会第五次会议通过了关于修改《个人所得税法》的决定，并于2018年10月1日起过渡施行，2019年1月1日起正式施行。</li>
+        </ol>
+    </div>
+    <div class="label">
+        <p>已缴税款</p>
+        <div class="change">
+            <input id="txtTaxAlready" type="text" readonly="readonly">
+        </div>
+    </div>
+    <div class="label">
+        <p>累计应缴税款</p>
+        <div class="change">
+            <input id="txtTaxAll" type="text" readonly="readonly">
+        </div>
+    </div>
+    <div onclick="btnReset_onClick_index()"><img ><span>重置</span></div>
+    <input type="number" required class="form-control" style="width: 50%;" id="salary" placeholder="请输入您的工资">
+    <button type="submit" class="btn btn-primary" id="btnsubmit">计算</button>
+    <p>您需要缴税<span id="val">0</span>元</p>
+
+</div>
+
+</body>
+<script type="text/javascript" src="index.js"></script>
+<script>
+    document.getElementById("btnsubmit").onclick = function() {
+        var salary = document.getElementById("salary").value; //薪资
+        if (salary <= 0) {
+            alert("薪资不能为0或小于0");
+            return false;
+        }
+        fetch('/calculateTax', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(salary),
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("val").innerText = data;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    };
+</script>
+
+</html>
